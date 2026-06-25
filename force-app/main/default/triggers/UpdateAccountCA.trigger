@@ -1,12 +1,28 @@
+/**
+ * Trigger : UpdateAccountCA
+ * Objet : Order
+ * Description : Met à jour le chiffre d'affaires du compte
+ *               lorsqu'une commande passe au statut "Activated".
+ * Appelle : UpdateAccounts.updateChiffreAffaires()
+ */
 trigger UpdateAccountCA on Order (after update) {
-	
-    set<Id> setAccountIds = new set<Id>();
-    
-    for(integer i=0; i< trigger.new.size(); i++){
-        Order newOrder= trigger.new[i];
-       
-        Account acc = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Id =:newOrder.AccountId ];
-        acc.Chiffre_d_affaire__c = acc.Chiffre_d_affaire__c + newOrder.TotalAmount;
-        update acc;
+
+    // Collecter les IDs des comptes dont les commandes viennent de passer en "Activated"
+    Set<Id> accountIds = new Set<Id>();
+
+    for (Order updatedOrder : Trigger.new) {
+        Order previousOrder = Trigger.oldMap.get(updatedOrder.Id);
+        Boolean statusChangedToActivated = (
+            updatedOrder.Status == 'Activated' && 
+            previousOrder.Status != 'Activated'
+        );
+
+        if (statusChangedToActivated) {
+            accountIds.add(updatedOrder.AccountId);
+        }
+    }
+
+    if (!accountIds.isEmpty()) {
+        UpdateAccounts.updateChiffreAffaires(accountIds);
     }
 }

@@ -1,16 +1,38 @@
+/**
+ * Composant : orders
+ * Description : Récupère et affiche le montant total
+ *               des commandes Activated du compte courant.
+ */
 import { LightningElement, api } from 'lwc';
-// TODO - récupérer la méthode apex permettant de faire ce calcul
+import getSumOrdersByAccount from '@salesforce/apex/MyTeamOrdersController.getSumOrdersByAccount';
 
 export default class Orders extends LightningElement {
 
+    // Montant total des commandes du compte courant
     sumOrdersOfCurrentAccount;
+
+    // ID du compte courant récupéré depuis la page Salesforce
     @api recordId;
 
+    /**
+     * Initialisation du composant —
+     * récupère le total des commandes au chargement.
+     */
     connectedCallback() {
         this.fetchSumOrders();
     }
 
+    /**
+     * Appelle la méthode Apex pour récupérer
+     * le montant total des commandes Activated.
+     */
     fetchSumOrders() {
-        // TODO - récupérer le montant total des Orders sur le compte avec la méthode apex
+        getSumOrdersByAccount({ accountId: this.recordId })
+            .then(result => {
+                this.sumOrdersOfCurrentAccount = result;
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération du total des commandes :', error);
+            });
     }
 }
