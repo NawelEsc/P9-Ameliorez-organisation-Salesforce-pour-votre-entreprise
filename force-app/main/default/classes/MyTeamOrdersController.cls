@@ -25,3 +25,4 @@ public with sharing class MyTeamOrdersController {
         return (Decimal) result.get('total');
     }
 }
+
