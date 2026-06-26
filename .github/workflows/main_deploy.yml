@@ -1,3 +1,4 @@
+cat > .github/workflows/main_deploy.yml << 'EOF'
 name: Deploy and Validate Metadata
 
 on:
@@ -30,7 +31,7 @@ jobs:
 
       - name: Install SFDX CLI and sfdx-git-delta plugin
         run: |
-          npm install -g @salesforce/cli@latest
+          npm install -g @salesforce/cli@2.15.9
           echo "y" | npm install sfdx-git-delta@3.3.0 -g
 
       - name: Authentification Salesforce
@@ -52,3 +53,4 @@ jobs:
             --manifest .temp/package/package.xml \
             --target-org target-org \
             --test-level RunLocalTests
+EOF
