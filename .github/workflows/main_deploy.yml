@@ -34,8 +34,10 @@ jobs:
           echo "y" | npm install sfdx-git-delta@3.3.0 -g
 
       - name: Authentification Salesforce
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
         run: |
-          echo "${{ secrets.SFDX_AUTH_URL }}" > ./auth_url.txt
+          echo "$SFDX_AUTH_URL" > ./auth_url.txt
           sf org login sfdx-url --sfdx-url-file ./auth_url.txt --alias target-org
 
       - name: Generate metadata delta pull request
