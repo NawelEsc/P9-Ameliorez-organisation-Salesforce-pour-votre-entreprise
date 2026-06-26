@@ -1,5 +1,5 @@
-cat > .github/workflows/main_deploy.yml << 'ENDOFFILE'
-name: Deploy and Validate Metadata
+python3 << 'EOF'
+content = """name: Deploy and Validate Metadata
 on:
   pull_request:
     branches:
@@ -40,11 +40,15 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           if [ -f ".temp/package/package.xml" ]; then
-            sf project deploy start \
-              --manifest .temp/package/package.xml \
-              --target-org target-org \
+            sf project deploy start \\
+              --manifest .temp/package/package.xml \\
+              --target-org target-org \\
               --test-level RunLocalTests
           else
             echo "Aucun fichier modifie a deployer"
           fi
-ENDOFFILE
+"""
+with open(".github/workflows/main_deploy.yml", "w") as f:
+    f.write(content)
+print("Fichier ecrit avec succes")
+EOF
