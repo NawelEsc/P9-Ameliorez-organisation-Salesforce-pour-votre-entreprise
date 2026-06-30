@@ -1,12 +1,12 @@
 /**
- * Composant : orders
+ * Composant : orderSummary
  * Description : Récupère et affiche le montant total
  *               des commandes Activated du compte courant.
  */
 import { LightningElement, api } from 'lwc';
 import getSumOrdersByAccount from '@salesforce/apex/MyTeamOrdersController.getSumOrdersByAccount';
 
-export default class Orders extends LightningElement {
+export default class OrderSummary extends LightningElement {
 
     // Montant total des commandes du compte courant
     sumOrdersOfCurrentAccount;
